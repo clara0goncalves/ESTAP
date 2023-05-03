@@ -24,3 +24,5 @@ Usando o UKF, adaptar a simulação e o filtro de modo a ter o mesmo sensor (ran
     - Resultados
 - **Junção dos dois resultados**
 
+> **_NOTE:_** Para mais informações sobre documentaçaõ e utilização do ukf tem neste link: https://www.cic.ipn.mx/~pescamilla/SensAct/ManualKFToolBox.pdf
+
