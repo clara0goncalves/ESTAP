@@ -14,7 +14,7 @@ Usando o UKF, adaptar a simulação e o filtro de modo a ter o mesmo sensor (ran
 
 
 ## Apresentação
-**UKF**
+- **UKF**
     - Definição e uso
     - O que foi feito para o implementar
     - Resultados
