@@ -20,7 +20,7 @@ Usando o UKF, adaptar a simulação e o filtro de modo a ter o mesmo sensor (ran
     - Resultados
 - **Range and Bearing**
     - Definição e uso
-    - - O que foi feito para o implementar
-    - - Resultados
+    - O que foi feito para o implementar
+    - Resultados
 - **Junção dos dois resultados**
 
