@@ -1,8 +1,8 @@
 globals;
 ginit;
 
-disp('Press return to run filter');
-pause;
+%disp('Press return to run filter');
+%pause;
 
 %initial_errors=[5; 5; 0.2; 0.1]
 % initialise filter

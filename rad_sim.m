@@ -52,10 +52,10 @@ rady2=end_loc(2) + (R_OFFSET*sin(end_loc(3)));
 radphi2=a_add(end_loc(4)*R_RATE,0.0); % gets normalized angle 
 
 % construct line segments for checking beacon view
-dx1=R_MAX_RANGE*cos(radphi1+start_loc(3));
-dy1=R_MAX_RANGE*sin(radphi1+start_loc(3));
-dx2=R_MAX_RANGE*cos(radphi2+end_loc(3));
-dy2=R_MAX_RANGE*sin(radphi2+end_loc(3));
+dx1=R_MAX_RANGE*cos(radphi1+start_loc(3)+ R_OFFSET_ANG);
+dy1=R_MAX_RANGE*sin(radphi1+start_loc(3)+ R_OFFSET_ANG);
+dx2=R_MAX_RANGE*cos(radphi2+end_loc(3)+ R_OFFSET_ANG);
+dy2=R_MAX_RANGE*sin(radphi2+end_loc(3)+ R_OFFSET_ANG);
 
 
 % To be observed, the beacon must lie between these two lines
@@ -76,8 +76,8 @@ end
 
 % if a beacon is found, assume it was seen from start_loc:
 if b>0
-  obs(1)=sqrt((radx1-beacons(b,1))^2+(rady1-beacons(b,2))^2);
-  obs(2)=a_sub(atan2(beacons(b,2)-rady1,beacons(b,1)-radx1),start_loc(3));
+  obs(1)= R_SCALE*sqrt((radx1-beacons(b,1))^2+(rady1-beacons(b,2))^2);
+  obs(2)=a_sub(atan2(beacons(b,2)-rady1,beacons(b,1)-radx1),(start_loc(3)+ R_OFFSET_ANG));
   obs(3)=b; % beacon index
   obs(4)=start_loc(4); % time stamp
   % noise model
