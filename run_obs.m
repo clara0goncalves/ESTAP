@@ -11,6 +11,7 @@ obs=obs_seq(xtrue,beacons);
 disp('Completed Simulation');
 
 % if(mode = 2)
+%{
 state=xtrue;
 [temp,SSIZE]=size(state);
 figure(PLAN_FIG);
@@ -26,9 +27,11 @@ for i= 1:SSIZE
         P2y=state(1,i);
         plot([P1x, P2x], [P1y, P2y], 'g');
         ind=ind+2;
+        print(ind)
       end
     end
 end
+%}
 %end
 
 

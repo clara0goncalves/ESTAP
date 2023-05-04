@@ -52,6 +52,7 @@ rady2=end_loc(2) + (R_OFFSET*sin(end_loc(3)));
 radphi2=a_add(end_loc(4)*R_RATE,0.0); % gets normalized angle 
 
 % construct line segments for checking beacon view
+%% Added ofset angle
 dx1=R_MAX_RANGE*cos(radphi1+start_loc(3)+ R_OFFSET_ANG);
 dy1=R_MAX_RANGE*sin(radphi1+start_loc(3)+ R_OFFSET_ANG);
 dx2=R_MAX_RANGE*cos(radphi2+end_loc(3)+ R_OFFSET_ANG);
