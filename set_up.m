@@ -1,7 +1,7 @@
 % script file to set up a vehicle run for subsequent
 % filtering and localisation algorithms
 % HDW 28/04/00
-
+clear all;
 globals; 	% define global variables
 ginit;  		% set global variables
 

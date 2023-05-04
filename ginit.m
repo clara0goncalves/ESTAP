@@ -5,9 +5,9 @@ PLAN_FIG=1;			% default handle for plan figure
 WORLD_SIZE=100;
 LINC=0.1;			% 0.1m length for spline interpolation
 %DT=0.1;				% Sample interval for controller
-DT=0.05;
-TEND = 2000*DT;
-%TEND=5000*DT;     % Total maximum run time for simulator
+DT=0.01;
+%TEND = 2000*DT;
+TEND=5000*DT;     % Total maximum run time for simulator
 VVEL=2;				% Vehicle velocity (assumed constant)
 
 KP=1;					% vehicle position error gain
@@ -17,7 +17,7 @@ WHEEL_BASE=1;		% vehicle wheel base (m)
 WHEEL_RADIUS=0.3;  % nomial wheel radius (m)
 R_OFFSET=0.0;		% radar offset (m)
 %R_MAX_RANGE=100.0;% maximum range (m)
-R_MAX_RANGE=50.0;
+R_MAX_RANGE=500.0;
 R_RATE=12.566;		% rotation rate (rads/s)
 
 

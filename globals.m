@@ -31,4 +31,4 @@ global SIGMA_BEARING % bearing variance (rads)
 
 global R_OFFSET_ANG
 global R_SCALE
-
+global DELTA_T

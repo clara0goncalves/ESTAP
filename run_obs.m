@@ -9,7 +9,6 @@ ginit;
 disp('Beginning observation simulations');
 obs=obs_seq(xtrue,beacons);
 disp('Completed Simulation');
-
 % if(mode = 2)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Codigo dde validação da simulação
@@ -28,6 +27,7 @@ for i = 1:SSIZE
             P2y = state(2, i) + (RMAX*sin(obs(ind+1, i) + state(3, i))); % fix typo: change cos to sin
             plot([P1x, P2x], [P1y, P2y], 'g');
             ind = ind + 2;
+
         else
             ind = ind + 1;
         end
@@ -41,6 +41,8 @@ end
 [obs_p, state_p]=p_obs(obs,xtrue);
 figure(PLAN_FIG);
 hold on
-plot(obs_p(1,:),obs_p(2,:),'rx');
-% plot(state_p(1,:),state_p(2,:),'r+');
+%plot(obs_p(1,:),obs_p(2,:),'rx');
+plot(state_p(1,:),state_p(2,:),'r+');
 hold off
+
+
