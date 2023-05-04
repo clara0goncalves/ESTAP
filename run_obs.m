@@ -11,6 +11,8 @@ obs=obs_seq(xtrue,beacons);
 disp('Completed Simulation');
 
 % if(mode = 2)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Codigo dde validação da simulação
 state=xtrue;
 [temp,SSIZE]=size(state);
 figure(PLAN_FIG);
@@ -31,8 +33,7 @@ for i = 1:SSIZE
         end
     end
 end
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55
 %end
 
 

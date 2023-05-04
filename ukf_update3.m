@@ -1,7 +1,7 @@
 %UKF_UPDATE2 - Augmented form Unscented Kalman Filter update step
 %
 % Syntax:
-%   [M,P,K,MU,IS,LH] = UKF_UPDATE2(M,P,Y,h,R,h_param,alpha,beta,kappa,mat)
+%   [M,P,K,MU,IS,LH] = UKF_UPDATE3(M,P,Y,h,R,X,w,h_param,alpha,beta,kappa,mat,sigmas)
 %
 % In:
 %   M  - Mean state estimate after prediction step
@@ -12,7 +12,9 @@
 %        function handle or name of function in
 %        form h([x;r],param)
 %   R  - Measurement covariance.
-%   param - Parameters of h               (optional, default empty)
+%   X - Sigma points of x
+%   w - Weights as cell array {mean-weights,cov-weights,c}
+%   h_param - Parameters of h               (optional, default empty)
 %   alpha - Transformation parameter      (optional)
 %   beta  - Transformation parameter      (optional)
 %   kappa - Transformation parameter      (optional)
@@ -43,8 +45,9 @@
 %   [M2,P2] = ukf_update2(M1,P1,Y,h,R,S);
 %
 % See also:
-%   UKF_PREDICT1, UKF_UPDATE1, UKF_PREDICT2, UKF_PREDICT3, UKF_UPDATE3
+%   UKF_PREDICT1, UKF_UPDATE1, UKF_PREDICT2, UKF_UPDATE2, UKF_PREDICT3
 %   UT_TRANSFORM, UT_WEIGHTS, UT_MWEIGHTS, UT_SIGMAS
+%
 
 % History:
 %   08.02.2008 JH Fixed a typo in the syntax description. 
@@ -63,7 +66,7 @@
 % Licence (version 2 or later); please refer to the file 
 % Licence.txt, included with the software, for details.
 
-function [M,P,K,MU,S,LH] = ukf_update2(M,P,Y,h,R,h_param,alpha,beta,kappa,mat)
+function [M,P,K,MU,S,LH] = ukf_update3(M,P,Y,h,R,X,w,h_param,alpha,beta,kappa,mat)
 
   %
   % Check that all arguments are there
@@ -71,19 +74,19 @@ function [M,P,K,MU,S,LH] = ukf_update2(M,P,Y,h,R,h_param,alpha,beta,kappa,mat)
   if nargin < 5
     error('Too few arguments');
   end
-  if nargin < 6
+  if nargin < 8
     h_param = [];
   end
-  if nargin < 7
+  if nargin < 9
     alpha = [];
   end
-  if nargin < 8
+  if nargin < 10
     beta = [];
   end
-  if nargin < 9
+  if nargin < 11
     kappa = [];
   end
-  if nargin < 10
+  if nargin < 12
     mat = [];
   end
 
@@ -97,21 +100,11 @@ function [M,P,K,MU,S,LH] = ukf_update2(M,P,Y,h,R,h_param,alpha,beta,kappa,mat)
   %
   % Do transform and make the update
   %
-  m = size(M,1);
-  n = size(R,1);
-  MA = [M;zeros(size(R,1),1)];
-  PA = zeros(size(P,1)+size(R,1));
-  PA(1:size(P,1),1:size(P,1)) = P;
-  PA(1+size(P,1):end,1+size(P,1):end) = R;  
-  
-  tr_param = {alpha beta kappa mat};
-  [MU,S,C] = ut_transform(MA,PA,h,h_param,tr_param); 
-
+  tr_param = {alpha beta kappa mat X w};
+  [MU,S,C,X,Y_s] = ut_transform(M,P,h,h_param,tr_param);
   K = C / S;
-  MA = MA + K * (Y - MU);
-  PA = PA - K * S * K';
-  M = MA(1:m,:);
-  P = PA(1:m,1:m);
+  M = M + K * (Y - MU);
+  P = P - K * S * K';
   if nargout > 5
     LH = gauss_pdf(Y,MU,S);
   end
