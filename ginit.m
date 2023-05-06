@@ -1,12 +1,9 @@
 % values for global variables
 % these are defined in globals.m
 PLAN_FIG=1;			% default handle for plan figure
-%WORLD_SIZE=500;   % 0-100 meters in each direction
-WORLD_SIZE=100;
+WORLD_SIZE=500;   % 0-100 meters in each direction
 LINC=0.1;			% 0.1m length for spline interpolation
-%DT=0.1;				% Sample interval for controller
-DT=0.01;
-%TEND = 2000*DT;
+DT=0.1;				% Sample interval for controller
 TEND=5000*DT;     % Total maximum run time for simulator
 VVEL=2;				% Vehicle velocity (assumed constant)
 
@@ -16,8 +13,7 @@ KO=1;					% vehicle orientation error gain
 WHEEL_BASE=1;		% vehicle wheel base (m)
 WHEEL_RADIUS=0.3;  % nomial wheel radius (m)
 R_OFFSET=0.0;		% radar offset (m)
-%R_MAX_RANGE=100.0;% maximum range (m)
-R_MAX_RANGE=500.0;
+R_MAX_RANGE=100.0;% maximum range (m)
 R_RATE=12.566;		% rotation rate (rads/s)
 
 
@@ -31,11 +27,12 @@ SIGMA_W=0.1;			% Additive Wheel Noise SD (rads/s)
 SIGMA_S=0.01;			% Mutiplicative steer noise SD (percent) 
 SIGMA_G=0.0087; 		% Additive steer noise SD (rads)
 SIGMA_R=0.005; 		% wheel radius SD noise (m)
-%SIGMA_RANGE=0.3;		% Range Variance (m)
-SIGMA_RANGE=0.15;
+SIGMA_RANGE=0.3;		% Range Variance (m)
 SIGMA_BEARING=0.035; % bearing variance (rads)
 R_OFFSET_ANG=-0.1;
 R_SCALE=0.95;
+
+
 
 fact=0.1;
 SIGMA_Q=SIGMA_Q*fact;

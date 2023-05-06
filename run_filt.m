@@ -16,8 +16,9 @@ Pinit= [0.024 0.0   0.0     0.0;
         0.0   0.0   0.0     0.0001];
      
 %run filter     
-[xest,Pest,xpred,Ppred,innov,innvar]=kfilter(obs,utrue,xinit,Pinit,beacons);
+function [xest,Pest,xpred,Ppred,innov,innvar] = ukf_filter(obs,utrue,xinit,Pinit,beacons,sigma_w,dt,u,kappa);
+
 
 disp('Completed Filtering')
-     
+end    
         
