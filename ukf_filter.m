@@ -1,66 +1,94 @@
-function [xest,Pest,xpred,Ppred,innov,innvar] = ukf_filter(obs,utrue,xinit,Pinit,beacons,sigma_w,dt,u,kappa)
+function [xest, Pest, xpred, Ppred, innov, innvar] = ukf_filter(obs,u,xinit,Pinit,beacons)
+% Input validation
 
-% UKF_FILTER Runs the Unscented Kalman Filter algorithm
+% More input validation code if necessary
+%UKF_FILTER - Apply unscented Kalman filter to the input data
 %
-%   [xest,Pest,xpred,Ppred,innov,innvar] = ukf_filter(obs,utrue,xinit,Pinit,beacons,sigma_w,dt,u,kappa)
+% Syntax:
+%   [xest,Pest,xpred,Ppred,innov,innvar] = ukf_filter(obs,u,xinit,Pinit,beacons)
 %
-%   This function runs the Unscented Kalman Filter algorithm on the input data.
+% In:
+%   obs     - Observations, D x N matrix
+%   u       - Control input, M x N matrix
+%   xinit   - Initial state mean, Dx1 column vector
+%   Pinit   - Initial state covariance, DxD matrix
+%   beacons - Beacon locations, DxL matrix
 %
-%   INPUTS:
-%   obs         : Measurement data
-%   utrue       : Ground truth data
-%   xinit       : Initial state estimate
-%   Pinit       : Initial state covariance
-%   beacons     : Beacon positions (3xN matrix)
-%   sigma_w     : Process noise standard deviation
-%   dt          : Sampling interval
-%   u           : Control input (not used in this implementation)
-%   kappa       : UKF parameter
+% Out:
+%   xest    - State estimate, DxN matrix
+%   Pest    - State covariance, DxDxN matrix
+%   xpred   - Predicted state estimate, DxN matrix
+%   Ppred   - Predicted state covariance, DxDxN matrix
+%   innov   - Innovations, D x N matrix
+%   innvar  - Innovation variances, 1 x N vector
 %
-%   OUTPUTS:
-%   xest        : State estimate
-%   Pest        : State covariance
-%   xpred       : State prediction
-%   Ppred       : State prediction covariance
-%   innov       : Innovation
-%   innovar     : Innovation covariance
+% Description:
+%   Applies an unscented Kalman filter to the input data, using the given
+%   initial state mean and covariance. The filter uses the provided control
+%   inputs to propagate the state estimate forward in time.
+%
+%   The observations are assumed to consist of the noisy positions of a set of
+%   beacons in a D-dimensional space, which are measured by a moving sensor
+%   over time. The sensor's motion is captured by the control inputs.
+%
+%   The function returns the state estimate, the state covariance, the predicted
+%   state estimate, the predicted state covariance, the innovations, and the
+%   innovation variances.
+%
+%   This implementation of the UKF follows the formulation presented in:
+%
+%   S. Julier and J. Uhlmann, "A New Extension of the Kalman Filter to
+%   Nonlinear Systems," in Proc. AeroSense: The 11th International
+%   Symposium on Aerospace/Defense Sensing, Simulation and Controls,
+%   vol. 3065, Orlando, FL, April 1997.
+%
+% See also UKF_PREDICT2 UKF_UPDATE2
+globals;
+N = size(obs, 2);
 
-n = size(xinit,1);
-m = size(obs,1);
+% Dimensionality of the state space
+D = length(xinit);
 
-% Create the sigma points
-[SP,W] = sigma_points(xinit,Pinit,kappa);
+% Process noise covariance matrix
+sigma_w = 0.01;
 
-% Initialize the output variables
-xest = zeros(n,length(obs));
-Pest = zeros(n,n,length(obs));
-xpred = zeros(n,length(obs));
-Ppred = zeros(n,n,length(obs));
-innov = zeros(m,length(obs));
-innvar = zeros(m,m,length(obs));
+% Unscented transform parameters
+alpha = 0.1;
+beta = 2;
+kappa = 0;
 
-% Run the UKF filter
-for k = 1:length(obs)
+% Allocate arrays for output variables
+xest = zeros(D, N);
+Pest = zeros(D, D, N);
+xpred = zeros(D, N);
+Ppred = zeros(D, D, N);
+innov = zeros(4, N);
+innvar = zeros(1, N);
+
+% Initialize state estimate and covariance
+x = xinit;
+P = Pinit;
+
+% Define prediction function
+f = @pred_func
+
+% Process noise covariance matrix
+Q = diag([sigma_w, sigma_w, sigma_w/10]);
+
+% Loop over time steps
+for k = 1:N
     
-    % Perform the prediction step
-    xpred(:,k) = ukf_predict(xinit,Pinit,sigma_w,dt,u,kappa);
-    [SP_pred,W_pred] = sigma_points(xpred(:,k),Ppred(:,:,k),kappa);
-    [xpred(:,k),Ppred(:,:,k)] = unscented_transform(SP_pred,W_pred);
+    % Predict step
+    [xpred(:, k), Ppred(:, :, k)] = ukf_predict2(x, P, f, Q, u(:, k), alpha, beta, kappa);
+
+    % Update step
+    [x, P, innov(:, k), innvar(k)] = ukf_update2(obs(:, k), xpred(:, k), Ppred(:, :, k), beacons, alpha, beta, kappa);
     
-    % Perform the update step
-    [SP_upd,W_upd] = sigma_points(xpred(:,k),Ppred(:,:,k),kappa);
-    [xest(:,k),Pest(:,:,k)] = ukf_update(SP_upd,W_upd,obs(:,k),beacons);
-    
-    % Compute the innovation and innovation covariance
-    innov(:,k) = obs(:,k) - beacons_to_range(beacons,xest(:,k));
-    innovvar(:,:,k) = cov(innov(:,1:k)');
-    
-    % Update the sigma points and weights for the next iteration
-    xinit = xest(:,k);
-    Pinit = Pest(:,:,k);
-    SP = SP_upd;
-    W = W_upd;
-    
+    % Save estimates
+    xest(:, k) = x;
+    Pest(:, :, k) = P;
+
 end
+
 
 end
