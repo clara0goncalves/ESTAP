@@ -1,7 +1,4 @@
 function [xest, Pest, xpred, Ppred, innov, innvar] = ukf_filter(obs,u,xinit,Pinit,beacons)
-% Input validation
-
-% More input validation code if necessary
 %UKF_FILTER - Apply unscented Kalman filter to the input data
 %
 % Syntax:
@@ -46,8 +43,10 @@ function [xest, Pest, xpred, Ppred, innov, innvar] = ukf_filter(obs,u,xinit,Pini
 globals;
 N = size(obs, 2);
 
+
+
 % Dimensionality of the state space
-D = length(xinit);
+D = length(xinit');
 
 % Process noise covariance matrix
 sigma_w = 0.01;
@@ -66,14 +65,17 @@ innov = zeros(4, N);
 innvar = zeros(1, N);
 
 % Initialize state estimate and covariance
-x = xinit;
+x = xinit';
 P = Pinit;
 
 % Define prediction function
-f = @pred_func
+f=@pred_func
 
 % Process noise covariance matrix
 Q = diag([sigma_w, sigma_w, sigma_w/10]);
+
+size(u)
+size(xinit)
 
 % Loop over time steps
 for k = 1:N
