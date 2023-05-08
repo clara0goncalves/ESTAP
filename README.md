@@ -11,7 +11,7 @@ Proposta de Trabalho: Usando o UKF, adaptar a simulação e o filtro de modo a t
 7.Estimar novos estados
 8. Apresentação
 
-**Como converter o filtro EKF em UKF, baseado no livro "Optimal Filtering with Kalman Filters and Smoothers" e na toolbox associada.**
+## Como converter o filtro EKF em UKF, baseado no livro "Optimal Filtering with Kalman Filters and Smoothers" e na toolbox associada.
 
 Em primeiro lugar, é importante entender que a principal diferença entre o EKF e o UKF é a maneira como a propagação da incerteza é tratada. No EKF, a incerteza é propagada linearmente usando uma aproximação de primeira ordem (série de Taylor), enquanto no UKF, a incerteza é propagada usando um conjunto de pontos de amostragem que representam a distribuição de probabilidade do estado.
 
