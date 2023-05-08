@@ -97,16 +97,16 @@ function [M,P,K,MU,S,LH] = ukf_update2(M,P,Y,h,R,h_param,alpha,beta,kappa,mat)
   %
   % Do transform and make the update
   %
-  
+
   m = size(M,1);
   n = size(R,1);
   MA = [M;zeros(size(R,1),1)];
   PA = zeros(size(P,1)+size(R,1));
   PA(1:size(P,1),1:size(P,1)) = P;
   PA(1+size(P,1):end,1+size(P,1):end) = R;  
-
   
   tr_param = {alpha beta kappa mat};
+  disp(['Size of X in ukf_update2 function: ' num2str(size(X))])
   [MU,S,C] = ut_transform(MA,PA,h,h_param,tr_param); 
 
   K = C / S;
