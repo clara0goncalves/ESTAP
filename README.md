@@ -33,7 +33,7 @@ Em primeiro lugar, é importante entender que a principal diferença entre o EKF
   - Definição e uso
   - O que foi feito para o implementar
   - Resultados
--Range and Bearing
+- Range and Bearing
   - Definição e uso
   - O que foi feito para o implementar
   - Resultados
