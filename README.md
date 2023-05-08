@@ -11,7 +11,7 @@ Proposta de Trabalho: Usando o UKF, adaptar a simulação e o filtro de modo a t
 7.Estimar novos estados
 8. Apresentação
 
-### Apresentação
+### Apresentação:
 - UKF
   - Definição e uso
   - O que foi feito para o implementar
