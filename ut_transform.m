@@ -119,8 +119,6 @@ function [mu,S,C,X,Y,w] = ut_transform(M,P,g,g_param,tr_param)
   % Propagate through the function
   %
   if isnumeric(g)
-    fprintf('Size of X matrix in ut_transform function: %d %d\n', size(X, 1), size(X, 2));
-    %fprintf('Size of g matrix in ut_transform function: %d %d\n', size(g, 1), size(g, 2));
     Y = g*X;
   elseif ischar(g) | strcmp(class(g),'function_handle')
     Y = [];
