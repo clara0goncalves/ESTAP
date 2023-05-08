@@ -42,7 +42,9 @@ for k = 1:K
     
     % Update step
     [xest(:, k+1), Pest(:, :, k+1), innov(:, k), innvar(:, k)] = ukf_update2(xpred(:, k), Ppred(:, :, k), @update_ukf, [], R, [], alpha, beta, kappa, []);
-                                  
+
+                                     
+
 end
 
 % Remove last estimate since it is not valid

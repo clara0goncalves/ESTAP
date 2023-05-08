@@ -1,3 +1,4 @@
+
 function X = pred_func(Xaug, param)
     globals;
     B = WHEEL_BASE;
@@ -15,3 +16,14 @@ function X = pred_func(Xaug, param)
     % Reshape state vector to correct dimensions
     X = reshape(xpred, [4, 1]);
 end
+%{
+% State equation
+function [xnext, Pnext] = pred_ukf(x, P, u, Q)
+F = eye(4) + [0 0 -u(2)*sin(x(4)) u(1)*cos(x(4)); 
+              0 0 u(2)*cos(x(4)) u(1)*sin(x(4)); 
+              0 0 0 1; 
+              0 0 0 0]*0.1;
+xnext = F*x;
+Pnext = F*P*F' + Q;
+end
+%}
