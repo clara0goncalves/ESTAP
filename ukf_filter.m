@@ -2,7 +2,6 @@ function [xest,Pest,xpred,Ppred,innov,innvar] = ukf_filter(obs,utrue,xinit,Pinit
 
 % State dimension
 n = length(xinit);
-
 % Number of time steps
 K = size(obs,2);
 
@@ -19,9 +18,12 @@ xest(:,1) = xinit;
 Pest(:,:,1) = Pinit;
 
 % UKF parameters
+h_param = {beacons,xpred(3),K};
 alpha = 0.001;
 beta = 2;
 kappa = 0;
+mat = 0;
+
 
 % Process and measurement noise covariance matrices
 Q = diag([0.1, 0.1, 0.1, 0.1]);
@@ -36,14 +38,15 @@ R = [sigma_r^2, 0, 0, 0;
      0, 0, 0, sigma_phidot^2];
 
 
+
 % Run UKF filter
 for k = 1:K
     % Predict step
     [xpred(:, k), Ppred(:, :, k)] = ukf_predict2(xest(:, k), Pest(:, :, k), @pred_ukf, Q, utrue(:, k), alpha, beta, kappa);
     
     % Update step
-    [xest(:, k+1), Pest(:, :, k+1), innov(:, k), innvar(:, k)] = ukf_update2(xpred(:, k), Ppred(:, :, k), @update_ukf, [], R, [], alpha, beta, kappa, []);
-                                  
+    [xest(:, k+1), Pest(:, :, k+1), innov(:, k), innvar(:, k)] = ukf_update2(xpred,Ppred, obs,@update_ukf,R,h_param,alpha,beta,kappa,mat);
+    %[xest(:, k+1), Pest(:, :, k+1), innov(:, k), innvar(:, k)] = ukf_update2(xpred(:, k), Ppred(:, :, k), obs, @update_ukf, R, h_param, alpha, beta, kappa, mat);                                                                                                
 end
 
 % Remove last estimate since it is not valid
