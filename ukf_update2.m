@@ -97,7 +97,6 @@ function [M,P,K,MU,S,LH] = ukf_update2(M,P,Y,h,R,h_param,alpha,beta,kappa,mat)
   %
   % Do transform and make the update
   %
-
   m = size(M,1);
   n = size(R,1);
   MA = [M;zeros(size(R,1),1)];

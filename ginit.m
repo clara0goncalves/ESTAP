@@ -32,8 +32,6 @@ SIGMA_BEARING=0.035; % bearing variance (rads)
 R_OFFSET_ANG=-0.1;
 R_SCALE=0.95;
 
-
-
 fact=0.1;
 SIGMA_Q=SIGMA_Q*fact;
 SIGMA_W=SIGMA_W*fact;
@@ -41,5 +39,7 @@ SIGMA_S=SIGMA_S*fact;
 SIGMA_G=SIGMA_G*fact;
 SIGMA_R=SIGMA_R*fact;
 
+OFFSET_GYRO=0.08;
+SIGMA_GYRO=0.002; 
 SIGMA_HEADING = 0.01;  
 GSIGMA_HEADING = 0.01;

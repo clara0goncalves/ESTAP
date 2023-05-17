@@ -1,5 +1,4 @@
 function [obs,b]=rad_sim(start_loc,end_loc,beacons)
-
 %
 % [obs,b]=rad_sim(start_loc,end_loc,beacons)
 %
@@ -91,5 +90,4 @@ else
   obs(3)=0;
   obs(4)=0;
 end
-
 

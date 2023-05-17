@@ -22,6 +22,8 @@ if((s1 ~= XSIZE)|(s2 ~=XSIZE))
   error('Ppred not of size XSIZE')
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 sigma_range=SIGMA_RANGE*SIGMA_RANGE;
 sigma_bearing=SIGMA_BEARING*SIGMA_BEARING;
 
@@ -31,40 +33,32 @@ zv=[R_OFFSET+(obs(1)*cos(obs(2)));
 T=[cos(obs(2)) -sin(obs(2)); 
    sin(obs(2)) cos(obs(2))];
 sigma_o=[sigma_range 0; 
-         0 sigma_bearing*(obs(1)^2)];
+         0 sigma_bearing];
 sigma_z=T*sigma_o*T';
 
-% then in base coordinates
-zb=[xpred(1)+(zv(1)*cos(xpred(3)))-(zv(2)*sin(xpred(3)));
-    xpred(1)+(zv(1)*sin(xpred(3)))+(zv(2)*cos(xpred(3)))];
-Tx=[1 0 -((zv(1)*sin(xpred(3)))+(zv(2)*cos(xpred(3)))) 0;
-    1 0 -((zv(1)*cos(xpred(3)))+(zv(2)*sin(xpred(3)))) 0];
-Tz=[cos(xpred(3)) -sin(xpred(3));
-    sin(xpred(3))  cos(xpred(3))];
-sigma_b=Tx*Ppred*Tx' + Tz*sigma_z*Tz';
-
-% now try and match observation to beacon map 
-
-% index=match(zb,sigma_b,beacons);
 index=obs(3);
 
+h = @func_update;
+h_param = {beacons,xpred(3),index};
+
+n = size(xpred,1);
+alpha = 0.5;
+beta = 2;
+kappa = 3-n;
+mat = 0; 
+
+w(1) =  sigma_range;
+w(2) =  sigma_bearing*(obs(1)^2);
+
+y(1) = obs(1);
+y(2) = obs(2);
 if (index)
-  dx=beacons(index,1)-xpred(1); 
-  dy=beacons(index,2)-xpred(2);
-  T=[ cos(xpred(3)) sin(xpred(3));
-    -sin(xpred(3)) cos(xpred(3))];
-  H=[-cos(xpred(3)) -sin(xpred(3)) (-(dx*sin(xpred(3)))+(dy*cos(xpred(3)))) 0;
-      sin(xpred(3)) -cos(xpred(3)) (-(dx*cos(xpred(3)))-(dy*sin(xpred(3)))) 0];
-  zpred=T*[dx;dy];
-  S=H*Ppred*H' + sigma_z;
-  W=Ppred*H'* inv(S);
-  Pest=Ppred-W*S*W';
-  innov=[zv(1)-zpred(1); zv(2)-zpred(2)];
-  xest=xpred+W*innov;
+    [xest,Pest,innov,~,S,~] = ukf_update1(xpred,Ppred,y',h,sigma_o,h_param,alpha,beta,kappa,mat);
+    innov=zeros(2,1); 
 else
-  xest=xpred;
-  Pest=Ppred;
-  S=zeros(2,2);
-  innov=zeros(2,1);
+    xest=xpred;
+    Pest=Ppred;
+    S=zeros(2,2);
+    innov=zeros(2,1);
 end
 

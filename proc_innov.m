@@ -6,8 +6,6 @@ function [binnov, binnovsig]=proc_innov(innov,innovar,obs,bnum)
 % innovations for specific beacons and standarad deviations
 %
 
-
-
 [temp,nsamps]=size(obs);
 binnov=zeros(3,nsamps);
 binnovsig=zeros(2,nsamps);

@@ -1,6 +1,6 @@
 replot
 
-figure(2)
+figure;
 clf
 hold on;
 v=[0 WORLD_SIZE 0 WORLD_SIZE];
@@ -15,9 +15,11 @@ ylabel('Y distance (m)')
 hold off
 
 
-figure(3)
-clf
+% figure(3)
+figure;
+% clf
 hold on
+subplot(2,2,1);
 plot(xtrue(4,:),abs(xtrue(1,:)-xest(1,:)),'r',xtrue(4,:),sqrt(squeeze(Pest(1,1,:))),'b')
 legend('True Error','Estimated Error')
 xlabel('Time (s)')
@@ -25,8 +27,9 @@ ylabel('Error (m)')
 title('X Direction Error')
 hold off
 
-figure(4)
-clf
+% figure;
+subplot(2,2,2);
+% clf
 hold on
 plot(xtrue(4,:),abs(xtrue(2,:)-xest(2,:)),'r',xtrue(4,:),sqrt(squeeze(Pest(2,2,:))),'b')
 legend('True Error','Estimated Error')
@@ -35,8 +38,9 @@ ylabel('Error (m)')
 title('Y Direction Error')
 hold off
 
-figure(5)
-clf
+% figure(5)
+subplot(2,2,3);
+% clf
 hold on
 plot(xtrue(4,:),abs(xtrue(3,:)-xest(3,:)),'r',xtrue(4,:),sqrt(squeeze(Pest(3,3,:))),'b')
 legend('True Error','Estimated Error')
@@ -45,8 +49,9 @@ ylabel('Error (rads)')
 title('Orientation Error')
 hold off
 
-figure(6)
-clf
+% figure(6)
+subplot(2,2,4);
+% clf
 hold on
 plot(xtrue(4,:),xest(4,:),'r',xtrue(4,:),WHEEL_RADIUS+sqrt(squeeze(Pest(4,4,:))),'b',xtrue(4,:),WHEEL_RADIUS-sqrt(squeeze(Pest(4,4,:))),'b')
 legend('Estimated Wheel Radius','Estimated Wheel Radius Error')
@@ -58,8 +63,10 @@ hold off
 %[inn,sinn]=proc_innov(innov,innvar,obs);
 [inn,sinn]=track_innov(innov,innvar,obs,xest,utrue);
 
-figure(7)
-clf
+% figure(7)
+figure;
+subplot(2,1,1);
+% clf
 hold on
 plot(inn(3,:),inn(1,:),'bx')
 plot(inn(3,:),inn(1,:),'b')
@@ -70,8 +77,9 @@ xlabel('Time (s)')
 ylabel('Innovation (m)');
 hold off
 
-figure(8)
-clf
+% figure(8)
+subplot(2,1,2);
+% clf
 hold on
 plot(inn(3,:),inn(2,:),'bx')
 plot(inn(3,:),inn(2,:),'b')
@@ -103,17 +111,19 @@ for i=1:cols
 end
 
 
-figure(9)
-clf
+figure;
+% clf
 hold on
+subplot(2,2,1);
 plot(xtrue(4,:),rho(1,:))
 xlabel('Time (s)')
 ylabel('Correlation Coefficient')
 title('X-Y Correlation Coefficient')
 hold off
 
-figure(10)
-clf
+% figure(10)
+subplot(2,2,2);
+% clf
 hold on
 plot(xtrue(4,:),rho(2,:),'b',xtrue(4,:),rho(3,:),'r')
 legend('X to Orientation Correlation','Y to Orientation Correlation')
@@ -122,8 +132,9 @@ ylabel('Correlation Coefficient')
 title('Position to Orientation Correlation Coefficient')
 hold off
 
-figure(11)
-clf
+% figure(11)
+subplot(2,2,3);
+% clf
 hold on
 plot(xtrue(4,:),rho(4,:),'b',xtrue(4,:),rho(5,:),'r')
 legend('X to Wheel Radius Correlation','Y to Wheel Radius Correlation')
@@ -132,8 +143,9 @@ ylabel('Correlation Coefficient')
 title('Position to Wheel Radius Correlation Coefficient')
 hold off
 
-figure(12)
-clf
+% figure(12)
+subplot(2,2,4);
+% clf
 hold on
 plot(xtrue(4,:),rho(6,:),'b')
 xlabel('Time (s)')

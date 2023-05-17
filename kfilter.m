@@ -30,27 +30,29 @@ if temp ~= 1
 end
 
 [s1,s2]=size(Pinit);
+disp(XSIZE)
 if((s1 ~= XSIZE)|(s2 ~=XSIZE))
   error('Pinit not of size XSIZE')
 end
 
-% make some space
 xpred=zeros(XSIZE,N_U);
 xest=zeros(XSIZE,N_U);
 innov=zeros(2,N_U);
 innvar=zeros(2,2,N_U);
 Ppred=zeros(XSIZE,XSIZE,N_U);
 Pest=zeros(XSIZE,XSIZE,N_U);
-% returns from pred and update are in the form of column vectors
 
+% returns from pred and update are in the form of column vectors
 xe=xinit;
 Pe=Pinit;
 time=0;
+
 for i=1:N_OBS
    dt=u(3,i)-time;
    time=u(3,i);
    [xp Pp]=pred(xe,Pe,dt,u(:,i));
    [xe, Pe, in, ins]=kupdate(xp,Pp,obs(:,i),beacons);
+
    xpred(:,i)=xp;
    xest(:,i)=xe;
    innov(:,i)=in;

@@ -4,9 +4,7 @@ function a=a_sub(a1,a2)
 % Subtract two angles so that the result 
 % always remains between +/- pi
 %
-
 % simple function to get angle subtraction consistent
-
 
 a=a1-a2;
 

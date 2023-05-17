@@ -28,8 +28,9 @@ global SIGMA_G 		% Additive steer noise SD (rads)
 global SIGMA_R 		% wheel radius SD noise (m)
 global SIGMA_RANGE	% Range Variance (m)
 global SIGMA_BEARING % bearing variance (rads)
-global sigma_w 
 
 global R_OFFSET_ANG
 global R_SCALE
+
+
 

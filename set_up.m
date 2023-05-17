@@ -1,9 +1,13 @@
 % script file to set up a vehicle run for subsequent
 % filtering and localisation algorithms
 % HDW 28/04/00
-clear all;
+
+clear all
+close all
+clc
+%%
 globals; 	% define global variables
-ginit;  		% set global variables
+ginit;      % set global variables
 
 % first step is to input beacons
 disp('Input Beacon Locations via mouse. Press return to end');
@@ -32,6 +36,8 @@ xtrue(1,1)=path(1,1);	% initial x
 xtrue(2,1)=path(2,1);	% initial y
 xtrue(3,1)=atan2(path(2,2)-path(2,1),path(1,2)-path(1,1)); % initial phi
 xtrue(4)=0;					% time=0;
+% xtrue(5)=OFFSET_GYRO;
+
 utrue(1)=VVEL;				% velocity set at 2 m/s
 utrue(2)=0;					% initial steer is zero
 utrue(3)=0;					% time=0

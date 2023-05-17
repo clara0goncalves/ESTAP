@@ -19,7 +19,7 @@
 % See also UT_WEIGHTS UT_TRANSFORM UT_SIGMAS
 %
 
-% Copyright (C) 2006 Simo S√§rkk√§
+% Copyright (C) 2006 Simo S‰rkk‰
 %
 % $Id$
 %
@@ -27,9 +27,16 @@
 % Licence (version 2 or later); please refer to the file
 % Licence.txt, included with the software, for details.
 
-function X = ut_sigmas(M,P,c);
+function X = ut_sigmas(M,P,c)
 
-%  A = schol(P);
+  n = size(P);
+  for i = 1:n(1)
+      for j = 1:n(2)
+          P(i,j) = real(P(i,j));
+      end
+  end    
   A = chol(P)';
   X = [zeros(size(M)) A -A];
   X = sqrt(c)*X + repmat(M,1,size(X,2));
+ 
+end

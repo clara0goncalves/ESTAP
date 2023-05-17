@@ -1,60 +1,71 @@
 function [xest,Pest,xpred,Ppred,innov,innvar] = ukf_filter(obs,utrue,xinit,Pinit,beacons)
 
-% State dimension
-n = length(xinit);
-% Number of time steps
-K = size(obs,2);
+globals;
 
-% Allocate space for output variables
-xest = zeros(n, K);
-Pest = zeros(n, n, K);
-xpred = zeros(n, K);
-Ppred = zeros(n, n, K);
-innov = zeros(size(obs));
-innvar = zeros(size(obs));
+[temp,N_OBS]=size(obs);
+if temp ~= 4
+  error('observation dimension of 4 expected')
+end
 
-% Initialize state estimate and covariance
-xest(:,1) = xinit;
-Pest(:,:,1) = Pinit;
+[temp,N_U]=size(u);
+if temp ~= 3
+  error('control input vector of dimension 3 expected')
+end
+if N_U ~= N_OBS
+  error('control and observation sequences of different length')
+end
 
-% UKF parameters
-h_param = {beacons,xpred(3),K};
-alpha = 0.001;
+[XSIZE,temp]=size(xinit);
+if temp ~= 1
+  error('xinit expected to be a column vector')
+end
+
+[s1,s2]=size(Pinit);
+disp(XSIZE)
+if((s1 ~= XSIZE)|(s2 ~=XSIZE))
+  error('Pinit not of size XSIZE')
+end
+
+% make some space
+xpred=zeros(XSIZE,N_U);
+xest=zeros(XSIZE,N_U);
+innov=zeros(2,N_U);
+innvar=zeros(2,2,N_U);
+Ppred=zeros(XSIZE,XSIZE,N_U);
+Pest=zeros(XSIZE,XSIZE,N_U);
+% returns from pred and update are in the form of column vectors
+
+xe=xinit;
+Pe=Pinit;
+time=0;
+
+param = {w,dt,u,B};
+n = size(xest,1);
+alpha = 0.5;
 beta = 2;
-kappa = 0;
-mat = 0;
-
-
-% Process and measurement noise covariance matrices
-Q = diag([0.1, 0.1, 0.1, 0.1]);
-%R = diag([0.1, 0.1]);
-sigma_r = 0.05; 
-sigma_phi = 0.03; 
-sigma_rdot = 0.1; 
-sigma_phidot = 0.01;
-R = [sigma_r^2, 0, 0, 0;
-     0, sigma_phi^2, 0, 0;
-     0, 0, sigma_rdot^2, 0;
-     0, 0, 0, sigma_phidot^2];
-
+kappa = 3-n;
+f = @func;
 
 
 % Run UKF filter
-for k = 1:K
+for i=1:N_OBS
     % Predict step
-    [xpred(:, k), Ppred(:, :, k)] = ukf_predict2(xest(:, k), Pest(:, :, k), @pred_ukf, Q, utrue(:, k), alpha, beta, kappa);
+    [xpred,Ppred] = ukf_predict2(xest,Pest,f,[],[param,alpha,beta,kappa]);
     
     % Update step
     [xest(:, k+1), Pest(:, :, k+1), innov(:, k), innvar(:, k)] = ukf_update2(xpred,Ppred, obs,@update_ukf,R,h_param,alpha,beta,kappa,mat);
     %[xest(:, k+1), Pest(:, :, k+1), innov(:, k), innvar(:, k)] = ukf_update2(xpred(:, k), Ppred(:, :, k), obs, @update_ukf, R, h_param, alpha, beta, kappa, mat);                                                                                                
 end
 
-% Remove last estimate since it is not valid
-xest = xest(:, 1:end-1);
-Pest = Pest(:, :, 1:end-1);
-xpred = xpred(:, 1:end-1);
-Ppred = Ppred(:, :, 1:end-1);
-innov = innov(:, 1:end-1);
-innvar = innvar(:, 1:end-1);
-
+for i=1:N_OBS
+   dt=u(3,i)-time;
+   time=u(3,i);
+   [xp Pp]=pred(xe,Pe,dt,u(:,i));
+   [xe, Pe, in, ins]=kupdate(xp,Pp,obs(:,i),beacons);
+   xpred(:,i)=xp;
+   xest(:,i)=xe;
+   innov(:,i)=in;
+   Ppred(:,:,i)=Pp;
+   Pest(:,:,i)=Pe;
+   innvar(:,:,i)=ins;
 end
