@@ -22,8 +22,8 @@ function [xpred, Ppred] = pred(xest, Pest, dt, u)
     sigma_r = SIGMA_R * SIGMA_R; % wheel radius variance
 
     % make some space
-    xpred = zeros(XSIZE, 1);
-    Ppred = zeros(XSIZE, XSIZE);
+    %xpred = zeros(XSIZE, 1);
+    %Ppred = zeros(XSIZE, XSIZE);
 
     w(1) = sigma_q;
     w(2) = sigma_w;
@@ -32,6 +32,8 @@ function [xpred, Ppred] = pred(xest, Pest, dt, u)
     w(5) = sigma_r;
 
     w = w.^2;
+
+    Q = diag([sigma_q, sigma_w, sigma_s, sigma_g, sigma_r]);
 
     % state transition matrix evaluation
     F = [1, 0, -dt * xest(4) * u(1) * sin(xest(3) + u(2)), dt * u(1) * cos(xest(3) + u(2));
@@ -61,7 +63,7 @@ function [xpred, Ppred] = pred(xest, Pest, dt, u)
     alpha = 0.5;
     beta = 2;
     kappa = 0;
-    [xpred, Ppred] = ukf_predict2(xest, Pest, @func, [], [param, alpha, beta, kappa]);
+    [xpred, Ppred] = ukf_predict2(xest, Pest, @func, Q, [param, alpha, beta, kappa]);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 end
